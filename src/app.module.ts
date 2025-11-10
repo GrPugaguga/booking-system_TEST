@@ -4,10 +4,15 @@ import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { DatabaseModule } from './database/database.module';
-import { CacheModule } from './cache/cache.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [EventsModule, BookingsModule, DatabaseModule, CacheModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    EventsModule,
+    BookingsModule,
+    DatabaseModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

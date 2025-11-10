@@ -1,34 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { ApiCreatedResponse, ApiOperation, ApiBody, ApiTags, ApiOkResponse } from '@nestjs/swagger';
+import { EventDto } from './dto/event.dto';
+import { GetEventsDto } from './dto/get-events.dto';
 
+@ApiTags('events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
-  create(@Body() createEventDto: CreateEventDto) {
+  @ApiOperation({ summary: 'Создать новое мероприятие' })
+  @ApiCreatedResponse({
+    description: 'Мероприятие успешно создано.',
+    type: EventDto,
+  })
+  @ApiBody({ type: CreateEventDto })
+  create(@Body() createEventDto: CreateEventDto): Promise<EventDto> {
     return this.eventsService.create(createEventDto);
   }
 
   @Get()
-  findAll() {
-    return this.eventsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(+id, updateEventDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(+id);
+  @ApiOperation({ summary: 'Получить список мероприятий' })
+  @ApiOkResponse({
+    description: 'Список мероприятий успешно получен.',
+    type: [EventDto], 
+  })
+  findAll(@Query() getEventsDto: GetEventsDto): Promise<EventDto[]> {
+    return this.eventsService.getList(getEventsDto);
   }
 }
