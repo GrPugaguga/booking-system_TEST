@@ -55,4 +55,17 @@ export class BookingsService {
     
     return userBookings;
   }
+
+
+  async getTop10(filter: "day"| 'week'|'month'): Promise<{user_id:string  , place: number, booking_coint:number}[]> {
+    const query = sql`SELECT userId, COUNT(*) AS booking_coint ,ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS place
+    FROM bookings
+    GROUP BY userId
+    ORDER BY booking_coint DESC
+    WHERE createdAt >= NOW() - INTERVAL '${filter === 'day' ? '1 day' : filter === 'week' ? '7 days' : '1 month'}'
+    LIMIT 10`;
+    const topBookings = await this.databaseService.db
+    .execute(query)
+    return topBookings;
+  }
 }

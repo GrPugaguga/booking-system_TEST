@@ -3,6 +3,7 @@ import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { BookingDto } from './dto/booking.dto'; 
+import { get } from 'http';
 
 @ApiTags('bookings')
 @Controller('bookings')
@@ -34,5 +35,10 @@ export class BookingsController {
   @ApiOkResponse({ description: 'Список бронирований пользователя успешно получен.', type: [BookingDto] })
   async getBookingsByUserId(@Param('userId') userId: string): Promise<BookingDto[]> {
     return this.bookingsService.getBookingsByUserId(userId);
+  }
+  
+  @Get('top10')
+  async getTop10Bookings(@Param('filter') filter: "day"| 'week'|'month'): Promise<{user_id:string  , place: number, booking_coint:number}[]> {
+    return await this.bookingsService.getTop10(filter);
   }
 }
