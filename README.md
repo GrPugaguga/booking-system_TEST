@@ -1,4 +1,5 @@
 Выполнено тестовое задание для вакансии https://ufa.hh.ru/vacancy/126449923
+(Добавил TASK.md с заданием)
 
 Стек NestJs, PostgreSQL + drizzleORM, swagger
 
